@@ -15,7 +15,7 @@ const posteos = [
         titulo: 'Datos curiosos',
         texto: 'El Glorious Model O Inalámbrico puede alcanzar hasta 25.000 DPI y una carga de batería al 100% puede durar aproximadamente 71 horas con el RGB apagado.',
         urlImagen: 'https://hardwaremarket.net/wp-content/uploads/2021/03/1_white.jpg',
-        altImagen: 'Mouse Glorious Model O'
+        altImagen: 'Mouse Glorious Model 0'
     },
     {
         id: 3,
