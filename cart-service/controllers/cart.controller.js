@@ -1,57 +1,30 @@
-// Capa de Controlador: Maneja las peticiones HTTP (req, res).
 import * as servicioCarrito from '../services/cart.service.js';
 
-// Para un sistema real, el ID de usuario vendría de un Token (JWT).
-// Por ahora, tu frontend deberá enviar un header 'x-user-id'.
 const obtenerUsuarioId = (req) => {
-    const usuarioId = req.headers['x-user-id'];
-    if (!usuarioId) {
-        // Si no hay ID, no podemos saber de quién es el carrito.
-        throw new Error('Usuario no autenticado. Se requiere header x-user-id.');
-    }
-    return usuarioId;
+    const userId = req.headers['x-user-id'];
+    if (!userId) throw new Error('Usuario no autenticado. Se requiere header x-user-id.');
+    return userId;
 };
 
-
-export const obtenerCarritoUsuario = (req, res) => {
-    try {
-        const usuarioId = obtenerUsuarioId(req);
-        const carrito = servicioCarrito.obtenerCarrito(usuarioId);
-        res.json(carrito);
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
+export const obtenerCarritoUsuario = async (req, res) => {
+    try { res.json(await servicioCarrito.obtenerCarrito(obtenerUsuarioId(req))); }
+    catch (error) { res.status(401).json({ message: error.message }); }
 };
 
-export const agregarItemAlCarrito = (req, res) => {
-    try {
-        const usuarioId = obtenerUsuarioId(req);
-        const producto = req.body; // El frontend envía el objeto producto
-        const carrito = servicioCarrito.agregarItem(usuarioId, producto);
-        res.json(carrito);
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
+export const agregarItemAlCarrito = async (req, res) => {
+    try { res.json(await servicioCarrito.agregarItem(obtenerUsuarioId(req), req.body)); }
+    catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-export const eliminarItemDelCarrito = (req, res) => {
-    try {
-        const usuarioId = obtenerUsuarioId(req);
-        const { id: productoId } = req.params;
-        const carrito = servicioCarrito.eliminarItem(usuarioId, productoId);
-        res.json(carrito);
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
+export const eliminarItemDelCarrito = async (req, res) => {
+    try { res.json(await servicioCarrito.eliminarItem(obtenerUsuarioId(req), req.params.id)); }
+    catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-
-export const checkout = (req, res) => {
+export const checkout = async (req, res) => {
     try {
-        const usuarioId = obtenerUsuarioId(req);
-        const carritoVacio = servicioCarrito.vaciarCarrito(usuarioId);
-        res.json({ message: 'Compra realizada con éxito', cart: carritoVacio });
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
+        const userId = obtenerUsuarioId(req);
+        const carritoVacio = await servicioCarrito.vaciarCarrito(userId);
+        res.json({ message: 'Compra realizada', cart: carritoVacio });
+    } catch (error) { res.status(500).json({ message: error.message }); }
 };

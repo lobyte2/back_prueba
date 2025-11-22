@@ -1,32 +1,29 @@
-// Capa de Servicio: Lógica de negocio para admin de usuarios.
-import usuarios from '../data/db.js';
+import { supabase } from '../data/supabase.js';
 
-export const obtenerTodos = () => {
-    return usuarios;
+export const obtenerTodos = async () => {
+    const { data, error } = await supabase.from('usuarios').select('*');
+    if (error) throw error;
+    return data;
 };
 
-export const crear = ({ email, password }) => {
-    if (!password || password.length < 5 || password.length > 15) {
-        throw new Error('La contraseña debe tener entre 5 y 15 caracteres');
-    }
-    if (usuarios.some(u => u.email === email)) {
-        throw new Error('El correo ya existe');
-    }
+export const crear = async (datos) => {
+    const { data: existente } = await supabase.from('usuarios').select('id').eq('email', datos.email).single();
+    if (existente) throw new Error('El correo ya existe');
 
-    const nuevoUsuario = {
-        id: usuarios.length > 0 ? Math.max(...usuarios.map(u => u.id)) + 1 : 1,
-        email, password, role: 'user', fullName: 'Nuevo Usuario (Admin)',
+    const { error } = await supabase.from('usuarios').insert([{
+        email: datos.email,
+        password: datos.password,
+        fullName: 'Nuevo Usuario (Admin)',
+        role: 'user',
         phone: 'N/A', region: 'N/A'
-    };
+    }]);
 
-    usuarios.push(nuevoUsuario);
-    return usuarios;
+    if (error) throw new Error(error.message);
+    return await obtenerTodos();
 };
 
-export const eliminarPorId = (usuarioId) => {
-    // Nota: Faltaría validar que un admin no se borre a sí mismo.
-    // Esto requeriría autenticación en este microservicio.
-    let usuariosFiltrados = usuarios.filter(u => u.id !== usuarioId);
-    usuarios = usuariosFiltrados;
-    return usuarios;
+export const eliminarPorId = async (usuarioId) => {
+    const { error } = await supabase.from('usuarios').delete().eq('id', usuarioId);
+    if (error) throw new Error(error.message);
+    return await obtenerTodos();
 };

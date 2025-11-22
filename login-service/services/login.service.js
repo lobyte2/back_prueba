@@ -1,38 +1,33 @@
-// Capa de Servicio: Lógica de negocio para autenticación.
-import usuarios from '../data/db.js';
+import { supabase } from '../data/supabase.js';
 
-export const autenticar = ({ email, password }) => {
-    if (!password || password.length < 5 || password.length > 15) {
-        throw new Error('La contraseña debe tener entre 5 y 15 caracteres');
-    }
+export const autenticar = async ({ email, password }) => {
+    const { data: usuario, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('email', email)
+        .eq('password', password)
+        .single();
 
-    const usuario = usuarios.find(u => u.email === email && u.password === password);
-
-    if (usuario) {
-        // Devolvemos solo lo que el frontend necesita para la sesión
-        return { id: usuario.id, email: usuario.email, role: usuario.role };
-    } else {
+    if (error || !usuario) {
         throw new Error('Credenciales inválidas');
     }
+    return { id: usuario.id, email: usuario.email, role: usuario.role };
 };
 
-export const registrar = (datosUsuario) => {
-    const { email, password, fullName, phone, region } = datosUsuario;
+export const registrar = async (datosUsuario) => {
+    const { data: existente } = await supabase.from('usuarios').select('id').eq('email', datosUsuario.email).single();
+    if (existente) throw new Error('El correo ya está registrado');
 
-    if (!password || password.length < 5 || password.length > 15) {
-        throw new Error('La contraseña debe tener entre 5 y 15 caracteres');
-    }
-    if (usuarios.some(u => u.email === email)) {
-        throw new Error('El correo ya está registrado');
-    }
+    const { data: nuevoUsuario, error } = await supabase.from('usuarios').insert([{
+        email: datosUsuario.email,
+        password: datosUsuario.password,
+        fullName: datosUsuario.fullName,
+        phone: datosUsuario.phone,
+        region: datosUsuario.region,
+        role: 'user'
+    }])
+        .select().single();
 
-    const nuevoUsuario = {
-        id: usuarios.length > 0 ? Math.max(...usuarios.map(u => u.id)) + 1 : 1,
-        email, password, role: 'user', fullName,
-        phone: phone || 'No especificado', region,
-    };
-
-    usuarios.push(nuevoUsuario);
-    // Devolvemos la nueva sesión
+    if (error) throw new Error(error.message);
     return { id: nuevoUsuario.id, email: nuevoUsuario.email, role: nuevoUsuario.role };
 };

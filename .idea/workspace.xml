@@ -5,27 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb397a7f-9314-4655-8189-a867ead945af" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog-service/data/supabase.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/data/supabase.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/login-service/data/supabase.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/data/supabase.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/data/supabase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog-service/controllers/blog.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/blog-service/controllers/blog.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog-service/data/db.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog-service/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/blog-service/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog-service/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/blog-service/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/blog-service/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog-service/services/blog.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/blog-service/services/blog.service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/controllers/cart.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/controllers/cart.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/routes/cart.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/routes/cart.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/data/db.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/services/cart.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/services/cart.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login-service/controllers/login.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/login-service/controllers/login.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login-service/data/db.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/login-service/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/login-service/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login-service/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/login-service/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/login-service/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login-service/services/login.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/login-service/services/login.service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/product-service/controllers/product.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/controllers/product.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/routes/product.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/routes/product.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/data/db.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/product-service/services/product.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/services/product.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/controllers/user.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/controllers/user.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/data/db.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/services/user.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/services/user.service.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="35iIFrt1DE4wZt3UeuDcwEs71qQ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -34,6 +69,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js.blog.service.js.executor": "Run",
+    "Node.js.server.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
@@ -60,7 +97,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1763586365368</updated>
-      <workItem from="1763586366916" duration="2348000" />
+      <workItem from="1763586366916" duration="3454000" />
+      <workItem from="1763761013443" duration="5717000" />
     </task>
     <servers />
   </component>

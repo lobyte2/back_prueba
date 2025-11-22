@@ -1,20 +1,19 @@
-// Capa de Controlador: Maneja las peticiones HTTP (req, res).
 import * as servicioLogin from '../services/login.service.js';
 
-export const manejarLogin = (req, res) => {
+export const manejarLogin = async (req, res) => {
     try {
-        const sesionUsuario = servicioLogin.autenticar(req.body);
+        const sesionUsuario = await servicioLogin.autenticar(req.body);
         res.json(sesionUsuario);
     } catch (error) {
-        res.status(401).json(error.message); // 401: No autorizado
+        res.status(401).json(error.message);
     }
 };
 
-export const manejarRegistro = (req, res) => {
+export const manejarRegistro = async (req, res) => {
     try {
-        const nuevaSesion = servicioLogin.registrar(req.body);
-        res.status(201).json(nuevaSesion); // 201: Creado
+        const nuevaSesion = await servicioLogin.registrar(req.body);
+        res.status(201).json(nuevaSesion);
     } catch (error) {
-        res.status(400).json(error.message); // 400: Petición incorrecta
+        res.status(400).json(error.message);
     }
 };

@@ -1,42 +1,34 @@
-// Capa de Servicio: Lógica de negocio para el carrito.
-import carritos from '../data/db.js';
+import { supabase } from '../data/supabase.js';
 
-// Función interna para crear un carrito vacío si no existe
-const asegurarCarrito = (usuarioId) => {
-    if (!carritos[usuarioId]) {
-        carritos[usuarioId] = [];
-    }
-    return carritos[usuarioId];
+const getCartFromDB = async (userId) => {
+    const { data } = await supabase.from('carritos').select('items').eq('user_id', userId).single();
+    return data ? data.items : [];
 };
 
-export const obtenerCarrito = (usuarioId) => {
-    return asegurarCarrito(usuarioId);
+const saveCartToDB = async (userId, items) => {
+    const { error } = await supabase.from('carritos').upsert({ user_id: userId, items: items }, { onConflict: 'user_id' });
+    if (error) throw new Error('Error guardando carrito');
+    return items;
 };
 
-export const agregarItem = (usuarioId, producto) => {
-    const carrito = asegurarCarrito(usuarioId);
-    // El frontend nos envía el objeto producto completo
-    const productoExistente = carrito.find(item => item.id === producto.id);
-
-    if (productoExistente) {
-        productoExistente.quantity += 1;
-    } else {
-        // El frontend espera la propiedad 'quantity'
-        carrito.push({ ...producto, quantity: 1 });
-    }
-    return carrito;
+export const obtenerCarrito = async (userId) => {
+    return await getCartFromDB(userId);
 };
 
-export const eliminarItem = (usuarioId, productoId) => {
-    const carrito = asegurarCarrito(usuarioId);
-    const idNumerico = parseInt(productoId);
-    carritos[usuarioId] = carrito.filter(item => item.id !== idNumerico);
-    return carritos[usuarioId];
+export const agregarItem = async (userId, producto) => {
+    const carrito = await getCartFromDB(userId);
+    const existe = carrito.find(item => item.id === producto.id);
+    if (existe) { existe.quantity += 1; }
+    else { carrito.push({ ...producto, quantity: 1 }); }
+    return await saveCartToDB(userId, carrito);
 };
 
+export const eliminarItem = async (userId, productoId) => {
+    let carrito = await getCartFromDB(userId);
+    carrito = carrito.filter(item => item.id !== parseInt(productoId));
+    return await saveCartToDB(userId, carrito);
+};
 
-export const vaciarCarrito = (usuarioId) => {
-    // Simplemente asignamos un array vacío al usuario
-    carritos[usuarioId] = [];
-    return carritos[usuarioId];
+export const vaciarCarrito = async (userId) => {
+    return await saveCartToDB(userId, []);
 };
