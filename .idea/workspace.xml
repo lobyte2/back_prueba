@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb397a7f-9314-4655-8189-a867ead945af" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/controllers/cart.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/controllers/cart.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/routes/cart.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/routes/cart.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/services/cart.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/services/cart.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/controllers/product.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/controllers/product.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/routes/product.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/routes/product.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/services/product.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/services/product.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,10 +16,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 4
-}]]></component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Rodrigoruiz12&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lobyte2/perifericos-backend.git&quot;,
+    &quot;accountId&quot;: &quot;5821b306-0d47-42f1-8bf6-dd231ff647c1&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="35iIFrt1DE4wZt3UeuDcwEs71qQ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -34,22 +40,41 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js.server.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/s-f-d/Desktop/perifericos-backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="perifericos-backend" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="perifericos-backend" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
-        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -61,10 +86,23 @@
       <option name="presentableId" value="Default" />
       <updated>1763586365368</updated>
       <workItem from="1763586366916" duration="2348000" />
+      <workItem from="1763928241287" duration="108000" />
+      <workItem from="1763928362875" duration="8000" />
+      <workItem from="1763928382636" duration="61000" />
+      <workItem from="1763928456604" duration="439000" />
+      <workItem from="1763935778787" duration="295000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

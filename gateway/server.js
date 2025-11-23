@@ -6,6 +6,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Endpoint de Estado (Health Check)
+app.get('/api/status', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'Servidor Gateway funcionando correctamente',
+        timestamp: new Date().toISOString()
+    });
+});
 // Redirigimos cada petición al microservicio correcto
 app.use('/api/products', proxy('http://localhost:3001')); // Al servicio de Productos
 app.use('/api/login', proxy('http://localhost:3002'));    // Al servicio de Login
