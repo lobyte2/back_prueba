@@ -1,7 +1,11 @@
 import { supabase } from '../data/supabase.js';
 
 export const obtenerTodos = async () => {
-    const { data, error } = await supabase.from('usuarios').select('*');
+    const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .order('id', { ascending: true }); // ← ORDENAR POR ID
+
     if (error) throw error;
     return data;
 };

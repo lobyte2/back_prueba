@@ -12,7 +12,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// Rutas bajo /users ✔
+// Rutas bajo /users
 app.use('/users', rutasUser);
 
 app.listen(PORT, () => {

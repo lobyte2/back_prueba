@@ -1,6 +1,9 @@
-// Capa de Rutas: Define los endpoints para admin de usuarios.
 import { Router } from 'express';
-import { obtenerTodosLosUsuarios, crearUsuario, eliminarUsuario } from '../controllers/user.controller.js';
+import {
+    obtenerTodosLosUsuarios,
+    crearUsuario,
+    eliminarUsuario
+} from '../controllers/user.controller.js';
 
 const router = Router();
 
