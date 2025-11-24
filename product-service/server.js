@@ -3,14 +3,15 @@ import cors from 'cors';
 import rutasProducto from './routes/product.routes.js';
 
 const app = express();
-const PORT = 3001;
+// CAMBIO IMPORTANTE: Usar process.env.PORT o 3001 si es local
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 
-// Las rutas aquí son relativas a /api/products (definido en el Gateway)
-app.use('/', rutasProducto);
+// CAMBIO CRÍTICO: Montamos todas las rutas bajo el prefijo /products
+app.use('/products', rutasProducto); // <--- AHORA ESPERA /products
 
 app.listen(PORT, () => {
-    console.log(`Servicio de Productos corriendo en http://localhost:${PORT}`);
+    console.log(`Servicio de Productos corriendo en el puerto ${PORT}`);
 });

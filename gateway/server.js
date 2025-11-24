@@ -24,87 +24,50 @@ const cartUrl = process.env.CART_SERVICE_URL || 'http://localhost:3004';
 const blogUrl = process.env.BLOG_SERVICE_URL || 'http://localhost:3005';
 
 console.log('--- Gateway Iniciado ---');
-console.log(`Products URL: ${productsUrl}`);
 
-// Middleware de Logs Global
-app.use((req, res, next) => {
-    console.log(`[Gateway IN] ${req.method} ${req.url}`);
-    next();
-});
-
-// --- PROXIES ---
-
-// Función para limpiar la URL de forma segura
-// Esta función asegura que si llega "/api/products", se transforme en "/"
-// Si llega "/api/products/123", se transforme en "/123"
-const rewritePath = (req, prefix) => {
-    // req.originalUrl siempre tiene la URL completa (/api/products/...)
-    const currentUrl = req.originalUrl;
-
-    // Si la URL es exactamente el prefijo o el prefijo con barra final
-    if (currentUrl === prefix || currentUrl === prefix + '/') {
-        return '/';
-    }
-
-    // Si es una sub-ruta (ej: /api/products/123), quitamos el prefijo
-    if (currentUrl.startsWith(prefix)) {
-        return currentUrl.replace(prefix, '');
-    }
-
-    // Fallback (no debería pasar si el app.use está bien configurado)
-    return req.url;
+// Función para reescribir la ruta quitando SÓLO el prefijo '/api'
+// Ejemplo: /api/products -> /products
+// Ejemplo: /api/login/login -> /login/login
+const rewritePath = (req) => {
+    // Usamos req.originalUrl porque es la URL completa que llegó al Gateway
+    const newPath = req.originalUrl.replace(/^\/api/, '');
+    console.log(`[Proxy Rewrite] ${req.originalUrl} -> ${newPath}`);
+    return newPath;
 };
 
-// 1. PRODUCTOS
-app.use('/api/products', proxy(productsUrl, {
-    https: true, // Vital para Render -> Render
-    proxyReqPathResolver: (req) => {
-        const newPath = rewritePath(req, '/api/products');
-        console.log(`[Proxy Products] ${req.originalUrl} -> ${productsUrl}${newPath}`);
-        return newPath;
+// Opciones estándar para todos los proxies
+const proxyOptions = (targetUrl) => ({
+    https: true,
+    // Aseguramos que el Host Header sea el correcto (crucial para Render)
+    proxyReqOptDecorator: (proxyReqOpts) => {
+        const target = new URL(targetUrl);
+        proxyReqOpts.headers['host'] = target.host;
+        return proxyReqOpts;
     },
+    // La reescritura es la misma para todos: quitamos /api
+    proxyReqPathResolver: rewritePath,
     proxyErrorHandler: (err, res, next) => {
-        console.error('[Proxy Error Products]', err);
+        console.error('[Proxy Error]', err);
         next(err);
     }
-}));
+});
 
-// 2. LOGIN
-app.use('/api/login', proxy(loginUrl, {
-    https: true,
-    proxyReqPathResolver: (req) => {
-        const newPath = rewritePath(req, '/api/login');
-        console.log(`[Proxy Login] ${req.originalUrl} -> ${loginUrl}${newPath}`);
-        return newPath;
-    }
-}));
 
-// 3. USERS
-app.use('/api/users', proxy(usersUrl, {
-    https: true,
-    proxyReqPathResolver: (req) => {
-        const newPath = rewritePath(req, '/api/users');
-        return newPath;
-    }
-}));
+// 1. PRODUCTOS: /api/products -> /products (en el microservicio)
+app.use('/api/products', proxy(productsUrl, proxyOptions(productsUrl)));
 
-// 4. CART
-app.use('/api/cart', proxy(cartUrl, {
-    https: true,
-    proxyReqPathResolver: (req) => {
-        const newPath = rewritePath(req, '/api/cart');
-        return newPath;
-    }
-}));
+// 2. LOGIN: /api/login/login -> /login/login
+app.use('/api/login', proxy(loginUrl, proxyOptions(loginUrl)));
 
-// 5. BLOG
-app.use('/api/blog', proxy(blogUrl, {
-    https: true,
-    proxyReqPathResolver: (req) => {
-        const newPath = rewritePath(req, '/api/blog');
-        return newPath;
-    }
-}));
+// 3. USERS: /api/users -> /users
+app.use('/api/users', proxy(usersUrl, proxyOptions(usersUrl)));
+
+// 4. CART: /api/cart -> /cart
+app.use('/api/cart', proxy(cartUrl, proxyOptions(cartUrl)));
+
+// 5. BLOG: /api/blog/posteos -> /blog/posteos
+app.use('/api/blog', proxy(blogUrl, proxyOptions(blogUrl)));
+
 
 app.listen(PORT, () => {
     console.log(`Gateway corriendo en puerto ${PORT}`);
