@@ -1,3 +1,4 @@
+import "./ping.js";
 import express from 'express';
 import cors from 'cors';
 import proxy from 'express-http-proxy';
