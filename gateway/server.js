@@ -6,6 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Leer puerto de Render (o usar 3000 localmente)
+const PORT = process.env.PORT || 3000;
+
 // Endpoint de Estado (Health Check)
 app.get('/api/status', (req, res) => {
     res.json({
@@ -14,13 +17,30 @@ app.get('/api/status', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
-// Redirigimos cada petición al microservicio correcto
-app.use('/api/products', proxy('http://localhost:3001')); // Al servicio de Productos
-app.use('/api/login', proxy('http://localhost:3002'));    // Al servicio de Login
-app.use('/api/users', proxy('http://localhost:3003'));    // Al servicio de Users (Admin)
-app.use('/api/cart', proxy('http://localhost:3004'));     // Al servicio de Carrito
-app.use('/api/blog', proxy('http://localhost:3005'));     // Al servicio de Blog
 
-app.listen(3000, () => {
-    console.log('API Gateway corriendo en http://localhost:3000');
+// --- RUTAS A MICROSERVICIOS ---
+// Usamos variables de entorno para Producción, o localhost para Desarrollo
+
+const productsUrl = process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001';
+const loginUrl = process.env.LOGIN_SERVICE_URL || 'http://localhost:3002';
+const usersUrl = process.env.USER_SERVICE_URL || 'http://localhost:3003';
+const cartUrl = process.env.CART_SERVICE_URL || 'http://localhost:3004';
+const blogUrl = process.env.BLOG_SERVICE_URL || 'http://localhost:3005';
+
+console.log('--- Configuración de Rutas ---');
+console.log(`Products -> ${productsUrl}`);
+console.log(`Login    -> ${loginUrl}`);
+console.log(`Users    -> ${usersUrl}`);
+console.log(`Cart     -> ${cartUrl}`);
+console.log(`Blog     -> ${blogUrl}`);
+
+// Redirecciones (Proxies)
+app.use('/api/products', proxy(productsUrl));
+app.use('/api/login', proxy(loginUrl));
+app.use('/api/users', proxy(usersUrl));
+app.use('/api/cart', proxy(cartUrl));
+app.use('/api/blog', proxy(blogUrl));
+
+app.listen(PORT, () => {
+    console.log(`API Gateway corriendo en puerto ${PORT}`);
 });
