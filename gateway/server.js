@@ -4,7 +4,6 @@ import proxy from 'express-http-proxy';
 
 const app = express();
 
-// Configuración CORS permisiva para evitar bloqueos entre Frontend y Gateway
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -15,7 +14,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// Endpoint de Estado
 app.get('/api/status', (req, res) => res.json({ status: 'OK', message: 'Gateway Online' }));
 
 // URLs de los microservicios
@@ -26,64 +24,86 @@ const cartUrl = process.env.CART_SERVICE_URL || 'http://localhost:3004';
 const blogUrl = process.env.BLOG_SERVICE_URL || 'http://localhost:3005';
 
 console.log('--- Gateway Iniciado ---');
-console.log(`Products -> ${productsUrl}`);
+console.log(`Products URL: ${productsUrl}`);
 
-// Middleware de Logs
+// Middleware de Logs Global
 app.use((req, res, next) => {
-    console.log(`[Gateway] ${req.method} ${req.url}`);
+    console.log(`[Gateway IN] ${req.method} ${req.url}`);
     next();
 });
 
 // --- PROXIES ---
 
-// Helper para limpiar rutas
-// Si llega /api/products -> envía /
-// Si llega /api/products/123 -> envía /123
-const proxyOptions = {
-    proxyReqPathResolver: (req) => {
-        // Eliminamos el prefijo '/api/products' (o el que corresponda) de la URL original
-        // Esto es más seguro que usar req.url directamente a veces
-        // Pero dado que tu microservicio espera "/", lo más simple es:
-        let path = req.url === '/' ? '' : req.url;
-        console.log(`[Proxy] Redirigiendo a: ${path || '/'}`);
-        return path || '/';
-    },
-    // IMPORTANTE: Esto evita problemas de host en Render
-    // Le dice al destino que la petición viene "como si fuera local" para él
-    // (Opcional pero recomendado en proxies)
-    // userResHeaderDecorator: (headers, userReq, userRes, proxyReq, proxyRes) => { ... }
+// Función para limpiar la URL de forma segura
+// Esta función asegura que si llega "/api/products", se transforme en "/"
+// Si llega "/api/products/123", se transforme en "/123"
+const rewritePath = (req, prefix) => {
+    // req.originalUrl siempre tiene la URL completa (/api/products/...)
+    const currentUrl = req.originalUrl;
+
+    // Si la URL es exactamente el prefijo o el prefijo con barra final
+    if (currentUrl === prefix || currentUrl === prefix + '/') {
+        return '/';
+    }
+
+    // Si es una sub-ruta (ej: /api/products/123), quitamos el prefijo
+    if (currentUrl.startsWith(prefix)) {
+        return currentUrl.replace(prefix, '');
+    }
+
+    // Fallback (no debería pasar si el app.use está bien configurado)
+    return req.url;
 };
 
 // 1. PRODUCTOS
 app.use('/api/products', proxy(productsUrl, {
-    ...proxyOptions,
-    https: true // Forzar HTTPS si las URLs de Render son https
+    https: true, // Vital para Render -> Render
+    proxyReqPathResolver: (req) => {
+        const newPath = rewritePath(req, '/api/products');
+        console.log(`[Proxy Products] ${req.originalUrl} -> ${productsUrl}${newPath}`);
+        return newPath;
+    },
+    proxyErrorHandler: (err, res, next) => {
+        console.error('[Proxy Error Products]', err);
+        next(err);
+    }
 }));
 
 // 2. LOGIN
 app.use('/api/login', proxy(loginUrl, {
-    ...proxyOptions,
-    https: true
+    https: true,
+    proxyReqPathResolver: (req) => {
+        const newPath = rewritePath(req, '/api/login');
+        console.log(`[Proxy Login] ${req.originalUrl} -> ${loginUrl}${newPath}`);
+        return newPath;
+    }
 }));
 
 // 3. USERS
 app.use('/api/users', proxy(usersUrl, {
-    ...proxyOptions,
-    https: true
+    https: true,
+    proxyReqPathResolver: (req) => {
+        const newPath = rewritePath(req, '/api/users');
+        return newPath;
+    }
 }));
 
 // 4. CART
 app.use('/api/cart', proxy(cartUrl, {
-    ...proxyOptions,
-    https: true
+    https: true,
+    proxyReqPathResolver: (req) => {
+        const newPath = rewritePath(req, '/api/cart');
+        return newPath;
+    }
 }));
 
 // 5. BLOG
-// OJO: Si blog-service espera /blog/posteos y el gateway recibe /api/blog/posteos
-// Con esta lógica enviará /posteos. Asegúrate de que blog-service tenga ruta /posteos o ajuste aquí.
 app.use('/api/blog', proxy(blogUrl, {
-    ...proxyOptions,
-    https: true
+    https: true,
+    proxyReqPathResolver: (req) => {
+        const newPath = rewritePath(req, '/api/blog');
+        return newPath;
+    }
 }));
 
 app.listen(PORT, () => {
