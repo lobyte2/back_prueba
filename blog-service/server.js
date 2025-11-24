@@ -1,16 +1,19 @@
 import express from 'express';
 import cors from 'cors';
-import rutasBlog from './routes/blog.routes.js';
+import rutasUser from './routes/user.routes.js';
 
 const app = express();
-const PORT = 3005;
+const PORT = process.env.PORT || 3003;
 
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 app.use(express.json());
 
-// Rutas relativas a /api/blog (definido en el Gateway)
-app.use('/', rutasBlog);
+// Montamos TODAS las rutas de usuarios bajo el prefijo /users
+app.use('/users', rutasUser);
 
 app.listen(PORT, () => {
-    console.log(`Servicio de Blog corriendo en http://localhost:${PORT}`);
+    console.log(`Servicio de Usuarios corriendo en el puerto ${PORT}`);
 });

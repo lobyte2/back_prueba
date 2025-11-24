@@ -3,14 +3,18 @@ import cors from 'cors';
 import rutasProducto from './routes/product.routes.js';
 
 const app = express();
-// CAMBIO IMPORTANTE: Usar process.env.PORT o 3001 si es local
-const PORT = process.env.PORT || 3001;
+// USO CORRECTO DEL PUERTO EN RENDER
+const PORT = process.env.PORT || 3001; // Si no hay variable de Render, usa 3001 local
 
-app.use(cors());
+app.use(cors({
+    origin: '*', // Permitir cualquier origen (para que Vercel y Render se hablen)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 app.use(express.json());
 
-// CAMBIO CRÍTICO: Montamos todas las rutas bajo el prefijo /products
-app.use('/products', rutasProducto); // <--- AHORA ESPERA /products
+// Montamos TODAS las rutas de productos bajo el prefijo /products
+// CRÍTICO: Esto significa que en local/Render, este servicio espera peticiones a /products
+app.use('/products', rutasProducto);
 
 app.listen(PORT, () => {
     console.log(`Servicio de Productos corriendo en el puerto ${PORT}`);
