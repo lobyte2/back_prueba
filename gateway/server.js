@@ -47,7 +47,7 @@ const proxyOptions = () => ({
 });
 
 // 1. PRODUCTOS
-app.use('/api/products', proxy(productsUrl, proxyOptions()));
+app.use('/api/products', proxy(productsUrl));
 
 // 2. LOGIN
 app.use('/api/login', proxy(loginUrl, proxyOptions()));
