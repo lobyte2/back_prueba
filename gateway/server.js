@@ -21,48 +21,19 @@ console.log('Rutas configuradas:', { productsUrl, loginUrl, usersUrl, cartUrl, b
 
 // --- CONFIGURACIÓN DE PROXIES ---
 
-// 1. PRODUCTOS
-// Si llega "/api/products", enviamos "/products" al microservicio
-app.use('/api/products', proxy(productsUrl, {
-    proxyReqPathResolver: (req) => {
-        // req.url aquí es lo que sigue a /api/products. Ej: "/" o "/123"
-        // Forzamos que empiece con /products
-        return `/products${req.url === '/' ? '' : req.url}`;
-    }
-}));
+// EXPLICACIÓN DE LA SOLUCIÓN:
+// Cuando usas app.use('/api/products', ...), Express automáticamente corta
+// esa parte de la URL. La variable 'req.url' pasa a ser solo lo que queda.
+// Ejemplo:
+//   Petición navegador: /api/products
+//   Llega al proxy como: /
+//   Microservicio recibe: /  (¡Justo lo que tu router espera!)
 
-// 2. LOGIN
-// Si llega "/api/login", enviamos "/login" al microservicio
-app.use('/api/login', proxy(loginUrl, {
-    proxyReqPathResolver: (req) => {
-        return `/login${req.url === '/' ? '' : req.url}`;
-    }
-}));
-
-// 3. USERS
-// Si llega "/api/users", enviamos "/users" al microservicio
-app.use('/api/users', proxy(usersUrl, {
-    proxyReqPathResolver: (req) => {
-        return `/users${req.url === '/' ? '' : req.url}`;
-    }
-}));
-
-// 4. CART
-// Si llega "/api/cart", enviamos "/cart" al microservicio
-app.use('/api/cart', proxy(cartUrl, {
-    proxyReqPathResolver: (req) => {
-        return `/cart${req.url === '/' ? '' : req.url}`;
-    }
-}));
-
-// 5. BLOG
-// Si llega "/api/blog", enviamos "/blog" al microservicio
-// OJO: Si tu servicio de blog usa "/blog/posteos", aquí se enviará "/blog/posteos"
-app.use('/api/blog', proxy(blogUrl, {
-    proxyReqPathResolver: (req) => {
-        return `/blog${req.url === '/' ? '' : req.url}`;
-    }
-}));
+app.use('/api/products', proxy(productsUrl));
+app.use('/api/login', proxy(loginUrl));
+app.use('/api/users', proxy(usersUrl));
+app.use('/api/cart', proxy(cartUrl));
+app.use('/api/blog', proxy(blogUrl));
 
 app.listen(PORT, () => {
     console.log(`Gateway corriendo en puerto ${PORT}`);
