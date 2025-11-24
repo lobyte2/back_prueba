@@ -1,16 +1,14 @@
 import { Router } from 'express';
-import {
-    obtenerCarritoUsuario,
-    agregarItemAlCarrito,
-    eliminarItemDelCarrito,
-    checkout // <--- Importar
-} from '../controllers/cart.controller.js';
+// Antes: import { obtenerCarritoUsuario, agregarItemAlCarrito, eliminarItemDelCarrito, checkout } from '../controllers/cart.controller.js';
+// Después:
+import * as cartController from '../controllers/cart.controller.js';
 
 const router = Router();
 
-router.get('/', obtenerCarritoUsuario);
-router.post('/itemlo', agregarItemAlCarrito);
-router.delete('/itemlo/:id', eliminarItemDelCarrito);
-router.post('/checkout', checkout); // <--- Nuevo Endpoint (Finalizar Compra)
+// Rutas del carrito (no cambiar endpoints)
+router.get('/', cartController.obtenerCarritoUsuario);
+router.post('/itemlo', cartController.agregarItemAlCarrito);
+router.delete('/itemlo/:id', cartController.eliminarItemDelCarrito);
+router.post('/checkout', cartController.checkout);
 
 export default router;
