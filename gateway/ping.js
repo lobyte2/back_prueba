@@ -9,17 +9,17 @@ const urls = [
     "https://back-blog-zxmt.onrender.com/"
 ];
 
-const wakeUp = () => {
+const wakeUp = async () => {
     console.log("⏱️ Ejecutando ping a microservicios...");
 
-    urls.forEach(async (url) => {
+    for (const url of urls) {
         try {
-            await axios.get(url);
+            await axios.get(url, { timeout: 5000 });
             console.log(`✅ Ping OK → ${url}`);
         } catch (error) {
             console.log(`❌ Ping FAIL → ${url}`);
         }
-    });
+    }
 };
 
 // Ejecutar cada 5 minutos
