@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb397a7f-9314-4655-8189-a867ead945af" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/gateway/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/server.js" afterDir="false" />
-    </list>
+    <list default="true" id="bb397a7f-9314-4655-8189-a867ead945af" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
