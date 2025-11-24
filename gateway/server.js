@@ -21,19 +21,78 @@ console.log('Rutas configuradas:', { productsUrl, loginUrl, usersUrl, cartUrl, b
 
 // --- CONFIGURACIÓN DE PROXIES ---
 
-// EXPLICACIÓN DE LA SOLUCIÓN:
-// Cuando usas app.use('/api/products', ...), Express automáticamente corta
-// esa parte de la URL. La variable 'req.url' pasa a ser solo lo que queda.
-// Ejemplo:
-//   Petición navegador: /api/products
-//   Llega al proxy como: /
-//   Microservicio recibe: /  (¡Justo lo que tu router espera!)
+// Helper para limpiar la URL: elimina el prefijo "/api/algo"
+// Si llega "/api/products", enviamos "/" al microservicio
+// Si llega "/api/products/123", enviamos "/123" al microservicio
+const stripPrefix = (prefix) => (req) => {
+    const newPath = req.url.replace(prefix, '') || '/';
+    console.log(`Redirigiendo ${req.url} -> ${newPath}`); // Log para depurar
+    return newPath;
+};
 
-app.use('/api/products', proxy(productsUrl));
-app.use('/api/login', proxy(loginUrl));
-app.use('/api/users', proxy(usersUrl));
-app.use('/api/cart', proxy(cartUrl));
-app.use('/api/blog', proxy(blogUrl));
+// 1. PRODUCTOS
+// El microservicio espera "/" para listar productos
+app.use('/api/products', proxy(productsUrl, {
+    proxyReqPathResolver: (req) => {
+        // req.url aquí ya viene sin el prefijo base del app.use si se usa router,
+        // pero con app.use('/api/products', proxy...) express-http-proxy a veces necesita ayuda.
+        // La forma más segura es reconstruir la ruta.
+
+        // Opción A: Usar req.url directamente si Express ya cortó el prefijo (funciona en algunos setups)
+        // Opción B: Usar req.originalUrl y cortar manualmente (más seguro)
+
+        let parts = req.originalUrl.split('?');
+        let queryString = parts[1] ? '?' + parts[1] : '';
+        let path = parts[0].replace('/api/products', '');
+        return (path || '/') + queryString;
+    }
+}));
+
+// 2. LOGIN
+// Si el microservicio espera "/login", entonces NO debemos quitar el prefijo, o ajustarlo.
+// Revisa si tu login-service tiene `app.use('/login', ...)` o `app.use('/', ...)`
+// Asumiendo que sigue el mismo patrón que products (app.use('/', ...)):
+app.use('/api/login', proxy(loginUrl, {
+    proxyReqPathResolver: (req) => {
+        let parts = req.originalUrl.split('?');
+        let queryString = parts[1] ? '?' + parts[1] : '';
+        let path = parts[0].replace('/api/login', '');
+        // Si tu microservicio de login espera "/login" internamente (ej: router.post('/login')),
+        // entonces descomenta la siguiente línea:
+        // path = '/login' + path;
+        return (path || '/') + queryString;
+    }
+}));
+
+// 3. USERS (Igual que products)
+app.use('/api/users', proxy(usersUrl, {
+    proxyReqPathResolver: (req) => {
+        let parts = req.originalUrl.split('?');
+        let queryString = parts[1] ? '?' + parts[1] : '';
+        let path = parts[0].replace('/api/users', '');
+        return (path || '/') + queryString;
+    }
+}));
+
+// 4. CART (Igual que products)
+app.use('/api/cart', proxy(cartUrl, {
+    proxyReqPathResolver: (req) => {
+        let parts = req.originalUrl.split('?');
+        let queryString = parts[1] ? '?' + parts[1] : '';
+        let path = parts[0].replace('/api/cart', '');
+        return (path || '/') + queryString;
+    }
+}));
+
+// 5. BLOG (Igual que products)
+app.use('/api/blog', proxy(blogUrl, {
+    proxyReqPathResolver: (req) => {
+        let parts = req.originalUrl.split('?');
+        let queryString = parts[1] ? '?' + parts[1] : '';
+        let path = parts[0].replace('/api/blog', '');
+        return (path || '/') + queryString;
+    }
+}));
 
 app.listen(PORT, () => {
     console.log(`Gateway corriendo en puerto ${PORT}`);
