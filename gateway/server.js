@@ -27,7 +27,10 @@ const blogUrl = process.env.BLOG_SERVICE_URL || 'http://localhost:3005';
 console.log('--- Gateway Iniciado ---');
 
 // Función para reescribir la ruta: elimina el prefijo '/api'
+// Ejemplo: /api/products/1 -> /products/1
 const rewritePath = (req) => {
+    // req.originalUrl contiene la ruta completa que llegó (ej. /api/products/1)
+    // El ^\/api asegura que solo se remueva si está al inicio.
     const newPath = req.originalUrl.replace(/^\/api/, '');
     console.log(`[Proxy Rewrite] ${req.originalUrl} -> ${newPath}`);
     return newPath;
@@ -36,8 +39,13 @@ const rewritePath = (req) => {
 // Opciones estándar para todos los proxies
 const proxyOptions = () => ({
     https: true,
+    // CRÍTICO: Solución nativa de proxy que arregla el Host Header en Render
     changeOrigin: true,
+
+    // Usamos la reescritura explícita
     proxyReqPathResolver: rewritePath,
+
+    // Manejo de errores
     proxyErrorHandler: (err, res, next) => {
         console.error('[Proxy Error]', err);
         if (!res.headersSent) {
@@ -46,20 +54,23 @@ const proxyOptions = () => ({
     }
 });
 
-// 1. PRODUCTOS
-app.use('/api/products', proxy(productsUrl));
 
-// 2. LOGIN
-app.use('/api/login', proxy(loginUrl, proxyOptions()));
+// 1. PRODUCTOS: /api/products -> /products
+// Tu microservicio de productos espera la ruta /products
+app.use('/api/products', proxy(productsUrl, proxyOptions(productsUrl)));
 
-// 3. USERS
-app.use('/api/users', proxy(usersUrl, proxyOptions()));
+// 2. LOGIN: /api/login -> /login
+app.use('/api/login', proxy(loginUrl, proxyOptions(loginUrl)));
 
-// 4. CART
-app.use('/api/cart', proxy(cartUrl, proxyOptions()));
+// 3. USERS: /api/users -> /users
+app.use('/api/users', proxy(usersUrl, proxyOptions(usersUrl)));
 
-// 5. BLOG
-app.use('/api/blog', proxy(blogUrl, proxyOptions()));
+// 4. CART: /api/cart -> /cart
+app.use('/api/cart', proxy(cartUrl, proxyOptions(cartUrl)));
+
+// 5. BLOG: /api/blog -> /blog
+app.use('/api/blog', proxy(blogUrl, proxyOptions(blogUrl)));
+
 
 app.listen(PORT, () => {
     console.log(`Gateway corriendo en puerto ${PORT}`);
