@@ -12,8 +12,8 @@ app.use(cors({
 
 app.use(express.json());
 
-// Montamos rutas bajo /api/blog
-app.use('/api/blog', rutasBlog);
+// Montamos rutas bajo /blog  ✔ CORRECTO
+app.use('/blog', rutasBlog);
 
 app.listen(PORT, () => {
     console.log(`Servicio de Blog corriendo en el puerto ${PORT}`);
