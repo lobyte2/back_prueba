@@ -1,4 +1,4 @@
-
+import pingRoutes from "./routes/ping.routes.js";
 import express from 'express';
 import cors from 'cors';
 import proxy from 'express-http-proxy';
@@ -72,4 +72,7 @@ app.use('/api/blog', proxy(blogUrl, proxyOptions(blogUrl)));
 
 app.listen(PORT, () => {
     console.log(`Gateway corriendo en puerto ${PORT}`);
+
+
+    app.use("/ping", pingRoutes);
 });
