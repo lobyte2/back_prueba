@@ -10,48 +10,59 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/api/status', (req, res) => res.json({ status: 'OK' }));
 
+// URLs de los microservicios (desde variables de entorno o localhost)
 const productsUrl = process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001';
 const loginUrl = process.env.LOGIN_SERVICE_URL || 'http://localhost:3002';
 const usersUrl = process.env.USER_SERVICE_URL || 'http://localhost:3003';
 const cartUrl = process.env.CART_SERVICE_URL || 'http://localhost:3004';
 const blogUrl = process.env.BLOG_SERVICE_URL || 'http://localhost:3005';
 
-// Función helper para limpiar la URL
-// Si llega "/api/products", le enviamos "/products" al microservicio
-const pathRewrite = (prefix) => (req) => {
-    return req.originalUrl.replace(prefix, '');
-};
+console.log('Rutas configuradas:', { productsUrl, loginUrl, usersUrl, cartUrl, blogUrl });
 
-// IMPORTANTE: Aquí ajustamos según cómo hayas programado tus microservicios.
-// Si tus microservicios esperan recibir "/products", "/cart", etc. NO uses el replace.
-// Si tus microservicios esperan recibir "/" (la raíz), SÍ usa el replace.
+// --- CONFIGURACIÓN DE PROXIES ---
 
-// Voy a asumir que en tus microservicios tienes algo como `app.use('/products', routes)`.
-// En ese caso, NO debemos quitar "/products".
-// Pero SÍ debemos quitar "/api" si no existe en el microservicio.
-
-// Intenta esta configuración estándar primero (pasa la URL tal cual pero sin /api si es redundante):
-
-app.use('/api/products', proxy(productsUrl));
-app.use('/api/login', proxy(loginUrl));
-app.use('/api/users', proxy(usersUrl));
-app.use('/api/cart', proxy(cartUrl));
-app.use('/api/blog', proxy(blogUrl));
-
-// Si esto sigue dando 404, significa que tus microservicios NO tienen el prefijo /api.
-// Entonces el Gateway recibe /api/products, y le manda /api/products al microservicio.
-// Y el microservicio dice "No tengo /api/products", tengo "/products".
-
-// PRUEBA B (Recomendada si la anterior falló): Quitar "/api"
-/*
+// 1. PRODUCTOS
+// Si llega "/api/products", enviamos "/products" al microservicio
 app.use('/api/products', proxy(productsUrl, {
     proxyReqPathResolver: (req) => {
-        // Transforma /api/products -> /products
-        return req.originalUrl.replace('/api', '');
+        // req.url aquí es lo que sigue a /api/products. Ej: "/" o "/123"
+        // Forzamos que empiece con /products
+        return `/products${req.url === '/' ? '' : req.url}`;
     }
 }));
-// Repetir para los otros...
-*/
+
+// 2. LOGIN
+// Si llega "/api/login", enviamos "/login" al microservicio
+app.use('/api/login', proxy(loginUrl, {
+    proxyReqPathResolver: (req) => {
+        return `/login${req.url === '/' ? '' : req.url}`;
+    }
+}));
+
+// 3. USERS
+// Si llega "/api/users", enviamos "/users" al microservicio
+app.use('/api/users', proxy(usersUrl, {
+    proxyReqPathResolver: (req) => {
+        return `/users${req.url === '/' ? '' : req.url}`;
+    }
+}));
+
+// 4. CART
+// Si llega "/api/cart", enviamos "/cart" al microservicio
+app.use('/api/cart', proxy(cartUrl, {
+    proxyReqPathResolver: (req) => {
+        return `/cart${req.url === '/' ? '' : req.url}`;
+    }
+}));
+
+// 5. BLOG
+// Si llega "/api/blog", enviamos "/blog" al microservicio
+// OJO: Si tu servicio de blog usa "/blog/posteos", aquí se enviará "/blog/posteos"
+app.use('/api/blog', proxy(blogUrl, {
+    proxyReqPathResolver: (req) => {
+        return `/blog${req.url === '/' ? '' : req.url}`;
+    }
+}));
 
 app.listen(PORT, () => {
     console.log(`Gateway corriendo en puerto ${PORT}`);
