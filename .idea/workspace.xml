@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb397a7f-9314-4655-8189-a867ead945af" name="Changes" comment="" />
+    <list default="true" id="bb397a7f-9314-4655-8189-a867ead945af" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/gateway/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/server.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,7 +78,7 @@
       <workItem from="1763928382636" duration="61000" />
       <workItem from="1763928456604" duration="439000" />
       <workItem from="1763935778787" duration="295000" />
-      <workItem from="1763997818949" duration="20585000" />
+      <workItem from="1763997818949" duration="20925000" />
     </task>
     <servers />
   </component>
