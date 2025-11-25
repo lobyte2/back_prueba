@@ -1,3 +1,4 @@
+// Usamos require() para CommonJS, que es compatible con versiones antiguas/default de Node.js
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cors = require('cors');
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 10000;
 // === CONFIGURACIÓN DE URLS DE MICROSERVICIOS ===
 // ¡Asegúrate de que estas URLS coincidan con tus despliegues en Render!
 
+// RECUERDA: Reemplaza estas URLs con las URLs REALES de tus servicios desplegados en Render.
 const USER_SERVICE_URL = 'https://back-user-3q47.onrender.com/';
 const LOGIN_SERVICE_URL = 'https://back-login-dvr8.onrender.com/';
 const PRODUCT_SERVICE_URL = 'https://back-product-vv5t.onrender.com/';
@@ -16,7 +18,7 @@ const BLOG_SERVICE_URL = 'https://back-blog-zxmt.onrender.com/';
 
 // Configuración CORS
 app.use(cors({
-    origin: '*', // Permite peticiones desde cualquier origen (ajusta esto en producción)
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
@@ -30,14 +32,14 @@ app.use((req, res, next) => {
     next();
 });
 
-// === CONFIGURACIÓN DE PROXIES (Solución a 404) ===
+// === CONFIGURACIÓN DE PROXIES (Añade la solución a los errores 404/502) ===
 
-// Proxy para Login Service (rutas: /api/login/login, /api/login/register)
+// Proxy para Login Service
 app.use('/api/login', createProxyMiddleware({
     target: LOGIN_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
-        '^/api/login': '/', // El microservicio Login recibe la ruta limpia
+        '^/api/login': '/',
     },
     onError: (err, req, res) => {
         console.error('Error de proxy al Login Service:', err);
@@ -47,14 +49,12 @@ app.use('/api/login', createProxyMiddleware({
 
 
 // PROXY PARA USER SERVICE (Soluciona el 404 en /api/users)
-// Redirige /api/users/* a la URL base del servicio de usuarios
 app.use('/api/users', createProxyMiddleware({
     target: USER_SERVICE_URL,
     changeOrigin: true,
-    // Reescribe la ruta para que el microservicio solo vea la parte después de /users
     pathRewrite: {
-        '^/api/users': '/', // Mapea /api/users a / (listar usuarios o agregar)
-        '^/api/users/(\\w+)': '/$1' // Mapea /api/users/123 a /123 (obtener/eliminar por ID)
+        '^/api/users': '/',
+        '^/api/users/(\\w+)': '/$1'
     },
     onError: (err, req, res) => {
         console.error('Error de proxy al User Service:', err);
@@ -82,7 +82,6 @@ app.use('/api/products', createProxyMiddleware({
 app.use('/api/cart', createProxyMiddleware({
     target: CART_SERVICE_URL,
     changeOrigin: true,
-    // Esta regla cubre rutas como /api/cart/items y /api/cart/checkout
     pathRewrite: {
         '^/api/cart': '/',
     },
